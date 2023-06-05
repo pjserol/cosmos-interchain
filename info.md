@@ -29,4 +29,15 @@ ignite chain serve --reset-once
 checkersd query checkers --help
 
 checkersd query checkers show-system-info
+
+checkersd query checkers show-system-info --output json
+
+checkersd query checkers list-stored-game
+
+checkersd tx checkers --help
+
+ignite scaffold message createGame black red \
+    --module checkers \
+    --response gameIndex
+
 ```
