@@ -22,7 +22,7 @@ func networkWithSystemInfoObjects(t *testing.T) (*network.Network, types.SystemI
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	systemInfo := types.SystemInfo{}
-	nullify.Fill(&systemInfo)
+	nullify.Fill(systemInfo)
 	state.SystemInfo = systemInfo
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
