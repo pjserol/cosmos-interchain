@@ -114,4 +114,6 @@ checkersd query tx 1C9A05A14906A4F94798B8A3A84E35F74DE4F474C3FC8DE9285484C227D91
 checkersd query checkers show-stored-game 1 --output json | jq ".storedGame.board" | sed 's/"//g' | sed 's/|/\'$'\n/g'
 checkersd tx checkers play-move 1 2 3 0 5 --from $alice
 
+# Generate proto changes
+ignite generate proto-go
 ```
