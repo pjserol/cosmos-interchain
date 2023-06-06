@@ -90,4 +90,16 @@ ignite scaffold message playMove gameIndex fromX:uint fromY:uint toX:uint toY:ui
     --module checkers \
     --response capturedX:int,capturedY:int,winner
 
+# Test transaction to play move
+ignite chain serve --reset-once
+export alice=$(checkersd keys show alice -a)
+export bob=$(checkersd keys show bob -a)
+checkersd tx checkers create-game $alice $bob --from $alice --gas auto
+checkersd tx checkers play-move --help
+checkersd tx checkers play-move 1 0 5 1 4 --from $bob
+checkersd query tx A8ACE948942827B49C102B791F008D6BE21ED9F712F1B805758CA69426EAAFF6
+checkersd tx checkers play-move 1 7 2 8 3 --from $alice
+checkersd tx checkers play-move 1 1 0 0 1 --from $alice
+checkersd tx checkers play-move 1 1 2 2 3 --from $alice
+checkersd query checkers show-stored-game 1 --output json | jq ".storedGame.board" | sed 's/"//g' | sed 's/|/\'$'\n/g'
 ```
