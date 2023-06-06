@@ -75,4 +75,13 @@ checkersd tx \
 checkersd query checkers show-system-info
 checkersd query checkers list-stored-game
 
+# Test transaction to create game
+ignite chain serve --reset-once
+export alice=$(checkersd keys show alice -a)
+export bob=$(checkersd keys show bob -a)
+checkersd tx checkers create-game $alice $bob --from $alice --gas auto
+checkersd query checkers show-system-info
+checkersd query checkers list-stored-game
+checkersd query checkers show-stored-game 1
+checkersd query checkers show-stored-game 1 --output json | jq ".storedGame.board" | sed 's/"//g' | sed 's/|/\'$'\n/g'
 ```
