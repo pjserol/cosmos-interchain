@@ -102,4 +102,16 @@ checkersd tx checkers play-move 1 7 2 8 3 --from $alice
 checkersd tx checkers play-move 1 1 0 0 1 --from $alice
 checkersd tx checkers play-move 1 1 2 2 3 --from $alice
 checkersd query checkers show-stored-game 1 --output json | jq ".storedGame.board" | sed 's/"//g' | sed 's/|/\'$'\n/g'
+
+# Test events emit
+ignite chain serve --reset-once
+export alice=$(checkersd keys show alice -a)
+export bob=$(checkersd keys show bob -a)
+checkersd tx checkers create-game $alice $bob --from $alice --gas auto
+checkersd tx checkers play-move 1 1 2 2 3 --from $alice
+checkersd tx checkers play-move 1 0 5 1 4 --from $bob
+checkersd query tx 1C9A05A14906A4F94798B8A3A84E35F74DE4F474C3FC8DE9285484C227D911D0 --output json | jq ".raw_log | fromjson"
+checkersd query checkers show-stored-game 1 --output json | jq ".storedGame.board" | sed 's/"//g' | sed 's/|/\'$'\n/g'
+checkersd tx checkers play-move 1 2 3 0 5 --from $alice
+
 ```
