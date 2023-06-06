@@ -116,4 +116,13 @@ checkersd tx checkers play-move 1 2 3 0 5 --from $alice
 
 # Generate proto changes
 ignite generate proto-go
+
+# Interact with cli to test winner
+ignite chain serve --reset-once
+export alice=$(checkersd keys show alice -a)
+export bob=$(checkersd keys show bob -a)
+checkersd tx checkers create-game $alice $bob --from $alice
+checkersd query checkers show-stored-game 1
+checkersd tx checkers play-move 1 1 2 2 3 --from $alice
+checkersd query checkers show-stored-game 1
 ```
