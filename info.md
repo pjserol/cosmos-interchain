@@ -126,3 +126,9 @@ checkersd query checkers show-stored-game 1
 checkersd tx checkers play-move 1 1 2 2 3 --from $alice
 checkersd query checkers show-stored-game 1
 ```
+
+```sh
+ignite scaffold single WorldParams name gravity:uint landSupply:uint \
+    --module otherworld \
+    --no-message
+```
