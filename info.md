@@ -141,3 +141,11 @@ ignite generate proto-go
 # Check project still workinkg
 ignite chain build
 ```
+
+```sh
+# Add moveCount to proto
+ignite generate proto-go
+
+# Check project still workinkg
+ignite chain build
+```
