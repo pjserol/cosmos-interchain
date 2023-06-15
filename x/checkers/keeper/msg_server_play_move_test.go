@@ -185,6 +185,19 @@ func TestPlayMoveWrongOutOfTurn(t *testing.T) {
 	require.Nil(t, playMoveResponse)
 	require.Equal(t, "{red}: player tried to play out of turn", err.Error())
 }
+func TestPlayMoveWrongMove(t *testing.T) {
+	msgServer, _, context := setupMsgServerWithOneGameForPlayMove(t)
+	playMoveResponse, err := msgServer.PlayMove(context, &types.MsgPlayMove{
+		Creator:   bob,
+		GameIndex: "1",
+		FromX:     0,
+		FromY:     5,
+		ToX:       0,
+		ToY:       5,
+	})
+	require.Nil(t, playMoveResponse)
+	require.Equal(t, "Already piece at destination position: {0 5}: wrong move", err.Error())
+}
 
 func TestPlayMoveWrongPieceAtDestination(t *testing.T) {
 	msgServer, _, context := setupMsgServerWithOneGameForPlayMove(t)
