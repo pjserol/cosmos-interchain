@@ -128,7 +128,13 @@ checkersd query checkers show-stored-game 1
 ```
 
 ```sh
+# Exercise 2 - interchain
 ignite scaffold single WorldParams name gravity:uint landSupply:uint \
     --module otherworld \
     --no-message
+```
+
+```sh
+# Add deadline to proto
+ignite generate proto-go
 ```
