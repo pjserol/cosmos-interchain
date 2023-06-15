@@ -16,20 +16,21 @@ func (k msgServer) CreateGame(goCtx context.Context, msg *types.MsgCreateGame) (
 	if !found {
 		panic("SystemInfo not found")
 	}
-
 	newIndex := strconv.FormatUint(systemInfo.NextId, 10)
 
 	newGame := rules.New()
 	storedGame := types.StoredGame{
-		Index:  newIndex,
-		Board:  newGame.String(),
-		Turn:   rules.PieceStrings[newGame.Turn],
-		Black:  msg.Black,
-		Red:    msg.Red,
-		Winner: rules.PieceStrings[rules.NO_PLAYER],
+		Index:    newIndex,
+		Board:    newGame.String(),
+		Turn:     rules.PieceStrings[newGame.Turn],
+		Black:    msg.Black,
+		Red:      msg.Red,
+		Winner:   rules.PieceStrings[rules.NO_PLAYER],
+		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
 	}
 
-	if err := storedGame.Validate(); err != nil {
+	err := storedGame.Validate()
+	if err != nil {
 		return nil, err
 	}
 

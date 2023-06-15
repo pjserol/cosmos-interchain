@@ -137,4 +137,7 @@ ignite scaffold single WorldParams name gravity:uint landSupply:uint \
 ```sh
 # Add deadline to proto
 ignite generate proto-go
+
+# Check project still workinkg
+ignite chain build
 ```
