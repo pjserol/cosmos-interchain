@@ -149,3 +149,30 @@ ignite generate proto-go
 # Check project still workinkg
 ignite chain build
 ```
+
+```sh
+# Test FIFO
+checkersd query checkers show-system-info
+
+checkersd tx checkers create-game $alice $bob --from $bob
+checkersd query checkers show-system-info
+
+checkersd query checkers show-stored-game 1
+
+checkersd tx checkers create-game $alice $bob --from $bob
+checkersd query checkers show-system-info
+
+checkersd query checkers show-stored-game 1
+checkersd query checkers show-stored-game 2
+
+checkersd tx checkers play-move 2 1 2 2 3 --from $alice
+checkersd query checkers show-system-info
+
+checkersd tx checkers create-game $alice $bob --from $alice
+checkersd tx checkers play-move 3 1 2 2 3 --from $alice
+checkersd tx checkers play-move 3 0 5 1 4 --from $bob
+
+checkersd query account $alice --output json | jq -r '.sequence'
+checkersd query checkers show-stored-game 3 --output json | jq '.storedGame.winner'
+checkersd query checkers show-system-info
+```
