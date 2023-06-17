@@ -9,8 +9,12 @@ import (
 )
 
 func TestPlayMove2Games1MoveHasSavedFifo(t *testing.T) {
-	msgServer, keeper, context := setupMsgServerWithOneGameForPlayMove(t)
+	msgServer, keeper, context, ctrl, escrow := setupMsgServerWithOneGameForPlayMove(t)
 	ctx := sdk.UnwrapSDKContext(context)
+	defer ctrl.Finish()
+
+	escrow.ExpectAny(context)
+
 	msgServer.CreateGame(context, &types.MsgCreateGame{
 		Creator: bob,
 		Black:   carol,
@@ -45,6 +49,7 @@ func TestPlayMove2Games1MoveHasSavedFifo(t *testing.T) {
 		MoveCount:   uint64(1),
 		BeforeIndex: "2",
 		AfterIndex:  "-1",
+		Wager:       45,
 	}, game1)
 	game2, found := keeper.GetStoredGame(ctx, "2")
 	require.True(t, found)
@@ -63,8 +68,12 @@ func TestPlayMove2Games1MoveHasSavedFifo(t *testing.T) {
 }
 
 func TestPlayMove2Games2MovesHasSavedFifo(t *testing.T) {
-	msgServer, keeper, context := setupMsgServerWithOneGameForPlayMove(t)
+	msgServer, keeper, context, ctrl, escrow := setupMsgServerWithOneGameForPlayMove(t)
 	ctx := sdk.UnwrapSDKContext(context)
+	defer ctrl.Finish()
+
+	escrow.ExpectAny(context)
+
 	msgServer.CreateGame(context, &types.MsgCreateGame{
 		Creator: bob,
 		Black:   carol,
@@ -107,6 +116,7 @@ func TestPlayMove2Games2MovesHasSavedFifo(t *testing.T) {
 		MoveCount:   uint64(1),
 		BeforeIndex: "2",
 		AfterIndex:  "-1",
+		Wager:       45,
 	}, game1)
 	game2, found := keeper.GetStoredGame(ctx, "2")
 	require.True(t, found)

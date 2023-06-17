@@ -190,3 +190,18 @@ checkersd query checkers show-stored-game 1
 checkersd query bank balances $alice
 checkersd query bank balances $bob
 ```
+
+```sh
+# Prepare mocks
+go install github.com/golang/mock/mockgen@v1.6.0
+
+mockgen -source=x/checkers/types/expected_keepers.go \
+    -package testutil \
+    -destination=x/checkers/testutil/expected_keepers_mocks.go
+
+# If use docker, add this line to automate it
+ENV PACKAGES curl gcc jq make
+
+# If any changes, use the command to regenerate mocks
+make mock-expected-keepers
+```
