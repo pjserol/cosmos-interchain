@@ -121,7 +121,7 @@ ignite generate proto-go
 ignite chain serve --reset-once
 export alice=$(checkersd keys show alice -a)
 export bob=$(checkersd keys show bob -a)
-checkersd tx checkers create-game $alice $bob --from $alice
+checkersd tx checkers create-game $alice $bob 33 --from $alice
 checkersd query checkers show-stored-game 1
 checkersd tx checkers play-move 1 1 2 2 3 --from $alice
 checkersd query checkers show-stored-game 1
@@ -175,4 +175,18 @@ checkersd tx checkers play-move 3 0 5 1 4 --from $bob
 checkersd query account $alice --output json | jq -r '.sequence'
 checkersd query checkers show-stored-game 3 --output json | jq '.storedGame.winner'
 checkersd query checkers show-system-info
+```
+
+```sh
+# Interact with cli to test wager (need one new argument to create the game)
+ignite chain serve --reset-once
+export alice=$(checkersd keys show alice -a)
+export bob=$(checkersd keys show bob -a)
+checkersd tx checkers create-game $alice $bob 1000000 --from $alice
+checkersd query checkers show-stored-game 1
+checkersd tx checkers play-move 1 1 2 2 3 --from $alice
+checkersd query checkers show-stored-game 1
+
+checkersd query bank balances $alice
+checkersd query bank balances $bob
 ```
