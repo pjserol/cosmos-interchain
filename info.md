@@ -223,3 +223,13 @@ ignite scaffold query canPlayMove \
     --module checkers \
     --response possible:bool,reason
 ```
+
+## Query play move
+
+```sh
+checkersd query checkers can-play-move --help
+checkersd query checkers can-play-move 2048 r 1 2 2 3
+checkersd query checkers can-play-move 1 w 1 2 2 3
+checkersd query checkers can-play-move 1 b 1 2 2 3
+checkersd query checkers can-play-move 1 b 2 3 3 4
+```
