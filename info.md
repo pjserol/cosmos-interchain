@@ -214,3 +214,12 @@ ENV PACKAGES curl gcc jq make
 # If any changes, use the command to regenerate mocks
 make mock-expected-keepers
 ```
+
+## Query messages
+
+```sh
+ignite scaffold query canPlayMove \
+    gameIndex player fromX:uint fromY:uint toX:uint toY:uint \
+    --module checkers \
+    --response possible:bool,reason
+```
