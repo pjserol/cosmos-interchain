@@ -186,9 +186,18 @@ checkersd tx checkers create-game $alice $bob 1000000 --from $alice
 checkersd query checkers show-stored-game 1
 checkersd tx checkers play-move 1 1 2 2 3 --from $alice
 checkersd query checkers show-stored-game 1
+checkersd tx checkers play-move 1 0 5 1 4 --from $bob
 
 checkersd query bank balances $alice
 checkersd query bank balances $bob
+
+# Check gas, depending on gas price
+# checkersd tx checkers create-game $alice $bob 1000000 --from $alice --dry-run
+checkersd tx checkers create-game \
+    $alice $bob 1000000 \
+    --from $alice -y | \
+        grep gas_used
+
 ```
 
 ```sh
