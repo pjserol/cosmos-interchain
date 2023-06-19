@@ -51,6 +51,7 @@ func TestWagerHandlerCollectFailedNoMove(t *testing.T) {
 		Black:     alice,
 		MoveCount: 0,
 		Wager:     45,
+		Denom:     "stake",
 	})
 	require.NotNil(t, err)
 	require.EqualError(t, err, "black cannot pay the wager: oops")
@@ -82,6 +83,7 @@ func TestWagerHandlerCollectFailedOneMove(t *testing.T) {
 		Red:       bob,
 		MoveCount: 1,
 		Wager:     45,
+		Denom:     "stake",
 	})
 	require.NotNil(t, err)
 	require.EqualError(t, err, "red cannot pay the wager: oops")
@@ -96,6 +98,7 @@ func TestWagerHandlerCollectNoMove(t *testing.T) {
 		Black:     alice,
 		MoveCount: 0,
 		Wager:     45,
+		Denom:     "stake",
 	})
 	require.Nil(t, err)
 }
@@ -109,6 +112,7 @@ func TestWagerHandlerCollectOneMove(t *testing.T) {
 		Red:       bob,
 		MoveCount: 1,
 		Wager:     45,
+		Denom:     "stake",
 	})
 	require.Nil(t, err)
 }
@@ -157,6 +161,8 @@ func TestWagerHandlerPayWrongNotPayTime(t *testing.T) {
 		Red:       bob,
 		Winner:    "b",
 		MoveCount: 0,
+		Wager:     45,
+		Denom:     "stake",
 	})
 }
 
@@ -180,6 +186,7 @@ func TestWagerHandlerPayWrongEscrowFailed(t *testing.T) {
 		Winner:    "b",
 		MoveCount: 1,
 		Wager:     45,
+		Denom:     "stake",
 	})
 }
 
@@ -194,6 +201,7 @@ func TestWagerHandlerPayEscrowCalledOneMove(t *testing.T) {
 		Winner:    "b",
 		MoveCount: 1,
 		Wager:     45,
+		Denom:     "stake",
 	})
 }
 
@@ -208,6 +216,7 @@ func TestWagerHandlerPayEscrowCalledTwoMoves(t *testing.T) {
 		Winner:    "b",
 		MoveCount: 2,
 		Wager:     45,
+		Denom:     "stake",
 	})
 }
 
@@ -266,6 +275,7 @@ func TestWagerHandlerRefundWrongEscrowFailed(t *testing.T) {
 		Black:     alice,
 		MoveCount: 1,
 		Wager:     45,
+		Denom:     "stake",
 	})
 }
 
@@ -278,5 +288,6 @@ func TestWagerHandlerRefundCalled(t *testing.T) {
 		Black:     alice,
 		MoveCount: 1,
 		Wager:     45,
+		Denom:     "stake",
 	})
 }

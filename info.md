@@ -233,3 +233,14 @@ checkersd query checkers can-play-move 1 w 1 2 2 3
 checkersd query checkers can-play-move 1 b 1 2 2 3
 checkersd query checkers can-play-move 1 b 2 3 3 4
 ```
+
+## Add token
+
+```sh
+# Interact with cli to test wager (need one new argument to create the game)
+ignite chain serve --reset-once
+export alice=$(checkersd keys show alice -a)
+export bob=$(checkersd keys show bob -a)
+checkersd tx checkers create-game $alice $bob 1000000 coin --from $alice
+checkersd query checkers show-stored-game 1
+```

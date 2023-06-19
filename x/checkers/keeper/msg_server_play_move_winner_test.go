@@ -40,6 +40,7 @@ func TestPlayMoveUpToWinner(t *testing.T) {
 		BeforeIndex: "-1",
 		AfterIndex:  "-1",
 		Wager:       45,
+		Denom:       "stake",
 	}, game)
 	events := sdk.StringifyEvents(ctx.EventManager().ABCIEvents())
 	require.Len(t, events, 2)
