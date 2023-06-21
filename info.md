@@ -283,3 +283,55 @@ rly config init --memo "My custom memo"
 
 rly chains add cosmoshub osmosis
 ```
+
+## Generate protobuf
+
+```sh
+mkdir -p scripts/protoc
+cd scripts/protoc
+curl -L https://github.com/protocolbuffers/protobuf/releases/download/v21.5/protoc-21.5-linux-x86_64.zip -o protoc.zip
+unzip protoc.zip
+rm protoc.zip
+# If /usr/local/bin is in your $PATH
+ln -s $(pwd)/bin/protoc /usr/local/bin/protoc
+cd ../..
+
+cd scripts
+npm install ts-proto@1.121.6 --save-dev --save-exact
+cd ..
+
+mkdir -p client/src/types/generated
+
+grep cosmos-sdk go.mod
+
+mkdir -p proto/cosmos/base/query/v1beta1
+curl https://raw.githubusercontent.com/cosmos/cosmos-sdk/v0.45.4/proto/cosmos/base/query/v1beta1/pagination.proto -o proto/cosmos/base/query/v1beta1/pagination.proto
+mkdir -p proto/google/api
+curl https://raw.githubusercontent.com/cosmos/cosmos-sdk/v0.45.4/third_party/proto/google/api/annotations.proto -o proto/google/api/annotations.proto
+curl https://raw.githubusercontent.com/cosmos/cosmos-sdk/v0.45.4/third_party/proto/google/api/http.proto -o proto/google/api/http.proto
+mkdir -p proto/gogoproto
+curl https://raw.githubusercontent.com/cosmos/cosmos-sdk/v0.45.4/third_party/proto/gogoproto/gogo.proto -o proto/gogoproto/gogo.proto
+
+cd scripts
+ls ../proto/checkers | xargs -I {} protoc \
+    --plugin="./node_modules/.bin/protoc-gen-ts_proto" \
+    --ts_proto_out="../client/src/types/generated" \
+    --proto_path="../proto" \
+    --ts_proto_opt="esModuleInterop=true,forceLong=long,useOptionals=messages" \
+    checkers/{}
+
+# Or with docker
+ls proto/checkers | xargs -I {} docker run --rm \
+    -v $(pwd):/checkers \
+    -w /checkers/scripts \
+    checkers_i \
+    protoc \
+    --plugin="./node_modules/.bin/protoc-gen-ts_proto" \
+    --ts_proto_out="../client/src/types/generated" \
+    --proto_path="../proto" \
+    --ts_proto_opt="esModuleInterop=true,forceLong=long,useOptionals=messages" \
+    checkers/{}
+
+# Rerun protoc file
+make gen-protoc-ts
+```
