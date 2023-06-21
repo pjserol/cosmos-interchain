@@ -244,3 +244,42 @@ export bob=$(checkersd keys show bob -a)
 checkersd tx checkers create-game $alice $bob 1000000 coin --from $alice
 checkersd query checkers show-stored-game 1
 ```
+
+## IBC Denoms - Gaia
+
+```sh
+git clone https://github.com/cosmos/gaia.git
+cd gaia
+git checkout v7.0.0
+make install
+
+gaiad version
+
+# If not available, look at registry https://github.com/cosmos/chain-registry/blob/master/cosmoshub/chain.json
+gaiad query ibc-transfer denom-trace 14F9BC3E44B8A9C1BE1FB08980FAB87034C9905EF17CF2F5008FC085218811CC --node https://rpc.cosmos.network:443
+
+gaiad query ibc-transfer denom-trace 14F9BC3E44B8A9C1BE1FB08980FAB87034C9905EF17CF2F5008FC085218811CC --node https://rpc-cosmoshub.blockapsis.com:443
+
+gaiad query ibc channel client-state transfer channel-141 --node https://rpc-cosmoshub.blockapsis.com:443
+```
+
+## Go Relayer
+
+```sh
+mkdir relay-go-test
+cd relay-go-test
+git clone https://github.com/cosmos/relayer.git
+
+cd relayer
+make install
+
+rly -h
+
+rly config init
+
+rly config show
+
+rly config init --memo "My custom memo"
+
+rly chains add cosmoshub osmosis
+```
