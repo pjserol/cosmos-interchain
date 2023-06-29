@@ -335,3 +335,9 @@ ls proto/checkers | xargs -I {} docker run --rm \
 # Rerun protoc file
 make gen-protoc-ts
 ```
+
+## Add leaderboard module
+
+```sh
+ignite scaffold module leaderboard --ibc
+```
