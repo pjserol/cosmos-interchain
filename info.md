@@ -340,4 +340,11 @@ make gen-protoc-ts
 
 ```sh
 ignite scaffold module leaderboard --ibc
+
+# store player data
+ignite scaffold map playerInfo \
+    wonCount:uint lostCount:uint forfeitedCount:uint \
+    dateUpdated:string \
+    --module leaderboard \
+    --no-message
 ```
