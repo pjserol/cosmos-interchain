@@ -18,6 +18,7 @@ type (
 		memKey     sdk.StoreKey
 		paramstore paramtypes.Subspace
 		bank       types.BankEscrowKeeper
+		board      types.CheckersLeaderboardKeeper
 	}
 )
 
@@ -27,6 +28,7 @@ func NewKeeper(
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
 	bank types.BankEscrowKeeper,
+	board types.CheckersLeaderboardKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -39,6 +41,7 @@ func NewKeeper(
 		memKey:     memKey,
 		paramstore: ps,
 		bank:       bank,
+		board:      board,
 	}
 }
 

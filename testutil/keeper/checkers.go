@@ -19,10 +19,10 @@ import (
 )
 
 func CheckersKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
-	return CheckersKeeperWithMocks(t, nil)
+	return CheckersKeeperWithMocks(t, nil, nil)
 }
 
-func CheckersKeeperWithMocks(t testing.TB, bank *testutil.MockBankEscrowKeeper) (*keeper.Keeper, sdk.Context) {
+func CheckersKeeperWithMocks(t testing.TB, bank *testutil.MockBankEscrowKeeper, leaderboard *testutil.MockCheckersLeaderboardKeeper) (*keeper.Keeper, sdk.Context) {
 	storeKey := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 
@@ -47,6 +47,7 @@ func CheckersKeeperWithMocks(t testing.TB, bank *testutil.MockBankEscrowKeeper) 
 		memStoreKey,
 		paramsSubspace,
 		bank,
+		leaderboard,
 	)
 
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())

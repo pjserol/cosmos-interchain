@@ -18,7 +18,8 @@ func setupMsgServerWithOneGameForPlayMove(t testing.TB) (types.MsgServer, keeper
 	*gomock.Controller, *testutil.MockBankEscrowKeeper) {
 	ctrl := gomock.NewController(t)
 	bankMock := testutil.NewMockBankEscrowKeeper(ctrl)
-	k, ctx := keepertest.CheckersKeeperWithMocks(t, bankMock)
+	leaderboardMock := testutil.NewMockCheckersLeaderboardKeeper(ctrl)
+	k, ctx := keepertest.CheckersKeeperWithMocks(t, bankMock, leaderboardMock)
 
 	checkers.InitGenesis(ctx, *k, *types.DefaultGenesis())
 	server := keeper.NewMsgServerImpl(*k)
