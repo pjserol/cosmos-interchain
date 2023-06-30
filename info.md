@@ -347,4 +347,9 @@ ignite scaffold map playerInfo \
     dateUpdated:string \
     --module leaderboard \
     --no-message
+
+ignite scaffold single board \
+    PlayerInfo:PlayerInfo \
+    --module leaderboard \
+    --no-message
 ```
