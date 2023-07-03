@@ -1,4 +1,4 @@
-package testutil
+package mock_types
 
 import (
 	"context"

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/alice/checkers/x/checkers/keeper"
-	"github.com/alice/checkers/x/checkers/testutil"
+	"github.com/alice/checkers/x/checkers/testutil/mock_types"
 	"github.com/alice/checkers/x/checkers/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -22,7 +22,7 @@ func CheckersKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	return CheckersKeeperWithMocks(t, nil, nil)
 }
 
-func CheckersKeeperWithMocks(t testing.TB, bank *testutil.MockBankEscrowKeeper, leaderboard *testutil.MockCheckersLeaderboardKeeper) (*keeper.Keeper, sdk.Context) {
+func CheckersKeeperWithMocks(t testing.TB, bank *mock_types.MockBankEscrowKeeper, leaderboard *mock_types.MockCheckersLeaderboardKeeper) (*keeper.Keeper, sdk.Context) {
 	storeKey := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 
@@ -41,6 +41,7 @@ func CheckersKeeperWithMocks(t testing.TB, bank *testutil.MockBankEscrowKeeper, 
 		memStoreKey,
 		"CheckersParams",
 	)
+
 	k := keeper.NewKeeper(
 		cdc,
 		storeKey,

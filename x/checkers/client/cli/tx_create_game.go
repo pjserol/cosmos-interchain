@@ -35,8 +35,8 @@ func CmdCreateGame() *cobra.Command {
 				clientCtx.GetFromAddress().String(),
 				argBlack,
 				argRed,
-				argDenom,
 				argWager,
+				argDenom,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

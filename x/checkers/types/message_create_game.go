@@ -9,7 +9,7 @@ const TypeMsgCreateGame = "create_game"
 
 var _ sdk.Msg = &MsgCreateGame{}
 
-func NewMsgCreateGame(creator, black, red, denom string, wager uint64) *MsgCreateGame {
+func NewMsgCreateGame(creator string, black string, red string, wager uint64, denom string) *MsgCreateGame {
 	return &MsgCreateGame{
 		Creator: creator,
 		Black:   black,
@@ -45,16 +45,5 @@ func (msg *MsgCreateGame) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
-
-	_, err = sdk.AccAddressFromBech32(msg.Black)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid black address (%s)", err)
-	}
-
-	_, err = sdk.AccAddressFromBech32(msg.Red)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid red address (%s)", err)
-	}
-
 	return nil
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/alice/checkers/x/checkers/keeper"
 	"github.com/alice/checkers/x/checkers/testutil"
 	"github.com/alice/checkers/x/checkers/types"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -62,7 +61,7 @@ func (suite *IntegrationTestSuite) SetupTest() {
 	suite.queryClient = queryClient
 }
 
-func makeBalance(address, denom string, balance int64) banktypes.Balance {
+func makeBalance(address string, balance int64, denom string) banktypes.Balance {
 	return banktypes.Balance{
 		Address: address,
 		Coins: sdk.Coins{
@@ -84,11 +83,11 @@ func addAll(balances []banktypes.Balance) sdk.Coins {
 
 func getBankGenesis() *banktypes.GenesisState {
 	coins := []banktypes.Balance{
-		makeBalance(alice, "stake", balAlice),
-		makeBalance(bob, "stake", balBob),
-		makeBalance(bob, "coin", balBob),
-		makeBalance(carol, "stake", balCarol),
-		makeBalance(carol, "coin", balCarol),
+		makeBalance(alice, balAlice, "stake"),
+		makeBalance(bob, balBob, "stake"),
+		makeBalance(bob, balBob, "coin"),
+		makeBalance(carol, balCarol, "stake"),
+		makeBalance(carol, balCarol, "coin"),
 	}
 	supply := banktypes.Supply{
 		Total: addAll(coins),

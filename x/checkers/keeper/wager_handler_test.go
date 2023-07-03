@@ -8,7 +8,7 @@ import (
 	keepertest "github.com/alice/checkers/testutil/keeper"
 	"github.com/alice/checkers/x/checkers"
 	"github.com/alice/checkers/x/checkers/keeper"
-	"github.com/alice/checkers/x/checkers/testutil"
+	"github.com/alice/checkers/x/checkers/testutil/mock_types"
 	"github.com/alice/checkers/x/checkers/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang/mock/gomock"
@@ -16,11 +16,10 @@ import (
 )
 
 func setupKeeperForWagerHandler(t testing.TB) (keeper.Keeper, context.Context,
-	*gomock.Controller, *testutil.MockBankEscrowKeeper) {
+	*gomock.Controller, *mock_types.MockBankEscrowKeeper) {
 	ctrl := gomock.NewController(t)
-	bankMock := testutil.NewMockBankEscrowKeeper(ctrl)
-	leaderboardMock := testutil.NewMockCheckersLeaderboardKeeper(ctrl)
-	k, ctx := keepertest.CheckersKeeperWithMocks(t, bankMock, leaderboardMock)
+	bankMock := mock_types.NewMockBankEscrowKeeper(ctrl)
+	k, ctx := keepertest.CheckersKeeperWithMocks(t, bankMock, nil)
 	checkers.InitGenesis(ctx, *k, *types.DefaultGenesis())
 	context := sdk.WrapSDKContext(ctx)
 	return *k, context, ctrl, bankMock
@@ -47,7 +46,7 @@ func TestWagerHandlerCollectFailedNoMove(t *testing.T) {
 	black, _ := sdk.AccAddressFromBech32(alice)
 	escrow.EXPECT().
 		SendCoinsFromAccountToModule(ctx, black, types.ModuleName, gomock.Any()).
-		Return(errors.New("oops"))
+		Return(errors.New("Oops"))
 	err := keeper.CollectWager(ctx, &types.StoredGame{
 		Black:     alice,
 		MoveCount: 0,
@@ -55,7 +54,7 @@ func TestWagerHandlerCollectFailedNoMove(t *testing.T) {
 		Denom:     "stake",
 	})
 	require.NotNil(t, err)
-	require.EqualError(t, err, "black cannot pay the wager: oops")
+	require.EqualError(t, err, "black cannot pay the wager: Oops")
 }
 
 func TestWagerHandlerCollectWrongNoRed(t *testing.T) {
@@ -79,7 +78,7 @@ func TestWagerHandlerCollectFailedOneMove(t *testing.T) {
 	red, _ := sdk.AccAddressFromBech32(bob)
 	escrow.EXPECT().
 		SendCoinsFromAccountToModule(ctx, red, types.ModuleName, gomock.Any()).
-		Return(errors.New("oops"))
+		Return(errors.New("Oops"))
 	err := keeper.CollectWager(ctx, &types.StoredGame{
 		Red:       bob,
 		MoveCount: 1,
@@ -87,7 +86,7 @@ func TestWagerHandlerCollectFailedOneMove(t *testing.T) {
 		Denom:     "stake",
 	})
 	require.NotNil(t, err)
-	require.EqualError(t, err, "red cannot pay the wager: oops")
+	require.EqualError(t, err, "red cannot pay the wager: Oops")
 }
 
 func TestWagerHandlerCollectNoMove(t *testing.T) {
@@ -162,7 +161,6 @@ func TestWagerHandlerPayWrongNotPayTime(t *testing.T) {
 		Red:       bob,
 		Winner:    "b",
 		MoveCount: 0,
-		Wager:     45,
 		Denom:     "stake",
 	})
 }
@@ -175,11 +173,11 @@ func TestWagerHandlerPayWrongEscrowFailed(t *testing.T) {
 	escrow.EXPECT().
 		SendCoinsFromModuleToAccount(ctx, types.ModuleName, black, gomock.Any()).
 		Times(1).
-		Return(errors.New("oops"))
+		Return(errors.New("Oops"))
 	defer func() {
 		r := recover()
 		require.NotNil(t, r, "The code did not panic")
-		require.Equal(t, r, "cannot pay winnings to winner: oops")
+		require.Equal(t, r, "cannot pay winnings to winner: Oops")
 	}()
 	keeper.MustPayWinnings(ctx, &types.StoredGame{
 		Black:     alice,
@@ -210,14 +208,14 @@ func TestWagerHandlerPayEscrowCalledTwoMoves(t *testing.T) {
 	keeper, context, ctrl, escrow := setupKeeperForWagerHandler(t)
 	ctx := sdk.UnwrapSDKContext(context)
 	defer ctrl.Finish()
-	escrow.ExpectRefund(context, alice, 90)
+	escrow.ExpectRefundWithDenom(context, alice, 90, "coin")
 	keeper.MustPayWinnings(ctx, &types.StoredGame{
 		Black:     alice,
 		Red:       bob,
 		Winner:    "b",
 		MoveCount: 2,
 		Wager:     45,
-		Denom:     "stake",
+		Denom:     "coin",
 	})
 }
 
@@ -266,11 +264,11 @@ func TestWagerHandlerRefundWrongEscrowFailed(t *testing.T) {
 	escrow.EXPECT().
 		SendCoinsFromModuleToAccount(ctx, types.ModuleName, black, gomock.Any()).
 		Times(1).
-		Return(errors.New("oops"))
+		Return(errors.New("Oops"))
 	defer func() {
 		r := recover()
 		require.NotNil(t, r, "The code did not panic")
-		require.Equal(t, "cannot refund wager to: oops", r)
+		require.Equal(t, "cannot refund wager to: Oops", r)
 	}()
 	keeper.MustRefundWager(ctx, &types.StoredGame{
 		Black:     alice,
@@ -284,11 +282,11 @@ func TestWagerHandlerRefundCalled(t *testing.T) {
 	keeper, context, ctrl, escrow := setupKeeperForWagerHandler(t)
 	ctx := sdk.UnwrapSDKContext(context)
 	defer ctrl.Finish()
-	escrow.ExpectRefund(context, alice, 45)
+	escrow.ExpectRefundWithDenom(context, alice, 45, "gold")
 	keeper.MustRefundWager(ctx, &types.StoredGame{
 		Black:     alice,
 		MoveCount: 1,
 		Wager:     45,
-		Denom:     "stake",
+		Denom:     "gold",
 	})
 }

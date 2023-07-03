@@ -6,26 +6,28 @@ import (
 	"time"
 
 	"github.com/alice/checkers/x/checkers/rules"
-	"github.com/alice/checkers/x/checkers/testutil"
 	"github.com/alice/checkers/x/checkers/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
 
 const (
-	alice = testutil.Alice
-	bob   = testutil.Bob
+	alice = "cosmos1jmjfq0tplp9tmx4v9uemw72y4d2wa5nr3xn9d3"
+	bob   = "cosmos1xyxs3skf3f4jfqeuv89yyaqvjc6lffavxqhc8g"
 )
 
 func GetStoredGame1() types.StoredGame {
 	return types.StoredGame{
-		Black:    alice,
-		Red:      bob,
-		Index:    "1",
-		Board:    rules.New().String(),
-		Turn:     "b",
-		Winner:   rules.PieceStrings[rules.NO_PLAYER],
-		Deadline: types.DeadlineLayout,
+		Black:       alice,
+		Red:         bob,
+		Index:       "1",
+		Board:       rules.New().String(),
+		Turn:        "b",
+		MoveCount:   0,
+		BeforeIndex: types.NoFifoIndex,
+		AfterIndex:  types.NoFifoIndex,
+		Deadline:    types.DeadlineLayout,
+		Winner:      rules.PieceStrings[rules.NO_PLAYER],
 	}
 }
 
@@ -95,7 +97,23 @@ func TestParseGameWrongTurnColor(t *testing.T) {
 	storedGame.Turn = "w"
 	game, err := storedGame.ParseGame()
 	require.Nil(t, game)
-	require.EqualError(t, err, "game cannot be parsed: turn: w")
+	require.EqualError(t, err, "game cannot be parsed: Turn: w")
+	require.EqualError(t, storedGame.Validate(), err.Error())
+}
+
+func TestParseDeadlineCorrect(t *testing.T) {
+	deadline, err := GetStoredGame1().GetDeadlineAsTime()
+	require.Nil(t, err)
+	require.Equal(t, time.Time(time.Date(2006, time.January, 2, 15, 4, 5, 999999999, time.UTC)), deadline)
+}
+
+func TestParseDeadlineMissingMonth(t *testing.T) {
+	storedGame := GetStoredGame1()
+	storedGame.Deadline = "2006-02 15:04:05.999999999 +0000 UTC"
+	_, err := storedGame.GetDeadlineAsTime()
+	require.EqualError(t,
+		err,
+		"deadline cannot be parsed: 2006-02 15:04:05.999999999 +0000 UTC: parsing time \"2006-02 15:04:05.999999999 +0000 UTC\" as \"2006-01-02 15:04:05.999999999 +0000 UTC\": cannot parse \" 15:04:05.999999999 +0000 UTC\" as \"-\"")
 	require.EqualError(t, storedGame.Validate(), err.Error())
 }
 
@@ -173,22 +191,6 @@ func TestGetWinnerNotYetCorrect(t *testing.T) {
 	require.Nil(t, winner)
 	require.False(t, found)
 	require.Nil(t, err)
-}
-
-func TestParseDeadlineCorrect(t *testing.T) {
-	deadline, err := GetStoredGame1().GetDeadlineAsTime()
-	require.Nil(t, err)
-	require.Equal(t, time.Time(time.Date(2006, time.January, 2, 15, 4, 5, 999999999, time.UTC)), deadline)
-}
-
-func TestParseDeadlineMissingMonth(t *testing.T) {
-	storedGame := GetStoredGame1()
-	storedGame.Deadline = "2006-02 15:04:05.999999999 +0000 UTC"
-	_, err := storedGame.GetDeadlineAsTime()
-	require.EqualError(t,
-		err,
-		"deadline cannot be parsed: 2006-02 15:04:05.999999999 +0000 UTC: parsing time \"2006-02 15:04:05.999999999 +0000 UTC\" as \"2006-01-02 15:04:05.999999999 +0000 UTC\": cannot parse \" 15:04:05.999999999 +0000 UTC\" as \"-\"")
-	require.EqualError(t, storedGame.Validate(), err.Error())
 }
 
 func TestGameValidateOk(t *testing.T) {

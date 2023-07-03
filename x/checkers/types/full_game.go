@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -26,9 +27,22 @@ func (storedGame StoredGame) ParseGame() (game *rules.Game, err error) {
 	}
 	board.Turn = rules.StringPieces[storedGame.Turn].Player
 	if board.Turn.Color == "" {
-		return nil, sdkerrors.Wrapf(fmt.Errorf("turn: %s", storedGame.Turn), ErrGameNotParseable.Error())
+		return nil, sdkerrors.Wrapf(errors.New(fmt.Sprintf("Turn: %s", storedGame.Turn)), ErrGameNotParseable.Error())
 	}
 	return board, nil
+}
+
+func (storedGame StoredGame) GetDeadlineAsTime() (deadline time.Time, err error) {
+	deadline, errDeadline := time.Parse(DeadlineLayout, storedGame.Deadline)
+	return deadline, sdkerrors.Wrapf(errDeadline, ErrInvalidDeadline.Error(), storedGame.Deadline)
+}
+
+func FormatDeadline(deadline time.Time) string {
+	return deadline.UTC().Format(DeadlineLayout)
+}
+
+func GetNextDeadline(ctx sdk.Context) time.Time {
+	return ctx.BlockTime().Add(MaxTurnDuration)
 }
 
 func (storedGame StoredGame) GetPlayerAddress(color string) (address sdk.AccAddress, found bool, err error) {
@@ -49,19 +63,6 @@ func (storedGame StoredGame) GetPlayerAddress(color string) (address sdk.AccAddr
 
 func (storedGame StoredGame) GetWinnerAddress() (address sdk.AccAddress, found bool, err error) {
 	return storedGame.GetPlayerAddress(storedGame.Winner)
-}
-
-func (storedGame StoredGame) GetDeadlineAsTime() (deadline time.Time, err error) {
-	deadline, errDeadline := time.Parse(DeadlineLayout, storedGame.Deadline)
-	return deadline, sdkerrors.Wrapf(errDeadline, ErrInvalidDeadline.Error(), storedGame.Deadline)
-}
-
-func FormatDeadline(deadline time.Time) string {
-	return deadline.UTC().Format(DeadlineLayout)
-}
-
-func GetNextDeadline(ctx sdk.Context) time.Time {
-	return ctx.BlockTime().Add(MaxTurnDuration)
 }
 
 func (storedGame *StoredGame) GetWagerCoin() (wager sdk.Coin) {

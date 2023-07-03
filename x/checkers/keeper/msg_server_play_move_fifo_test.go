@@ -9,7 +9,7 @@ import (
 )
 
 func TestPlayMove2Games1MoveHasSavedFifo(t *testing.T) {
-	msgServer, keeper, context, ctrl, escrow := setupMsgServerWithOneGameForPlayMove(t)
+	msgServer, keeper, context, ctrl, escrow, _ := setupMsgServerWithOneGameForPlayMove(t)
 	ctx := sdk.UnwrapSDKContext(context)
 	defer ctrl.Finish()
 
@@ -73,7 +73,7 @@ func TestPlayMove2Games1MoveHasSavedFifo(t *testing.T) {
 }
 
 func TestPlayMove2Games2MovesHasSavedFifo(t *testing.T) {
-	msgServer, keeper, context, ctrl, escrow := setupMsgServerWithOneGameForPlayMove(t)
+	msgServer, keeper, context, ctrl, escrow, _ := setupMsgServerWithOneGameForPlayMove(t)
 	ctx := sdk.UnwrapSDKContext(context)
 	defer ctrl.Finish()
 

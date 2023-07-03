@@ -108,7 +108,7 @@ func (suite *IntegrationTestSuite) TestForfeitPlayedOnceRefundedEvenZero() {
 		Black:   carol,
 		Red:     alice,
 		Wager:   0,
-		Denom:   "stake",
+		Denom:   "coin",
 	})
 	suite.RequireBankBalance(balCarol, carol)
 	suite.msgServer.PlayMove(goCtx, &types.MsgPlayMove{
@@ -145,7 +145,7 @@ func (suite *IntegrationTestSuite) TestForfeitPlayedOnceRefundedEmittedEvenZero(
 		Black:   carol,
 		Red:     alice,
 		Wager:   0,
-		Denom:   "stake",
+		Denom:   "coin",
 	})
 	suite.RequireBankBalance(balCarol, carol)
 	suite.msgServer.PlayMove(goCtx, &types.MsgPlayMove{
@@ -280,7 +280,7 @@ func (suite *IntegrationTestSuite) TestForfeitOlderPlayedTwicePaidEvenZero() {
 		Red:     bob,
 		Black:   carol,
 		Wager:   0,
-		Denom:   "stake",
+		Denom:   "coin",
 	})
 	suite.msgServer.PlayMove(goCtx, &types.MsgPlayMove{
 		Creator:   carol,
@@ -325,7 +325,7 @@ func (suite *IntegrationTestSuite) TestForfeitOlderPlayedTwicePaidEmittedvenZero
 		Red:     bob,
 		Black:   carol,
 		Wager:   0,
-		Denom:   "stake",
+		Denom:   "coin",
 	})
 	suite.msgServer.PlayMove(goCtx, &types.MsgPlayMove{
 		Creator:   carol,

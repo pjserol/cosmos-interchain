@@ -1,7 +1,7 @@
 mock-expected-keepers:
 	mockgen -source=x/checkers/types/expected_keepers.go \
-		-package testutil \
-		-destination=x/checkers/testutil/expected_keepers_mocks.go 
+		-package mock_types \
+		-destination=x/checkers/testutil/mock_types/expected_keepers_mocks.go 
 
 install-protoc-gen-ts:
 	mkdir -p scripts/protoc
