@@ -4,10 +4,12 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgSendCandidate } from "./types/leaderboard/tx";
 import { MsgUpdateBoard } from "./types/leaderboard/tx";
 
 
 const types = [
+  ["/alice.checkers.leaderboard.MsgSendCandidate", MsgSendCandidate],
   ["/alice.checkers.leaderboard.MsgUpdateBoard", MsgUpdateBoard],
   
 ];
@@ -41,6 +43,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgSendCandidate: (data: MsgSendCandidate): EncodeObject => ({ typeUrl: "/alice.checkers.leaderboard.MsgSendCandidate", value: MsgSendCandidate.fromPartial( data ) }),
     msgUpdateBoard: (data: MsgUpdateBoard): EncodeObject => ({ typeUrl: "/alice.checkers.leaderboard.MsgUpdateBoard", value: MsgUpdateBoard.fromPartial( data ) }),
     
   };

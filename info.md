@@ -357,4 +357,8 @@ ignite scaffold single board \
 make mock-expected-keepers
 
 ignite scaffold message updateBoard --module leaderboard
+
+ignite scaffold packet candidate \
+    PlayerInfo:PlayerInfo \
+    --module leaderboard
 ```
