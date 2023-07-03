@@ -352,4 +352,9 @@ ignite scaffold single board \
     PlayerInfo:PlayerInfo \
     --module leaderboard \
     --no-message
+
+# Regenerate mocks
+make mock-expected-keepers
+
+ignite scaffold message updateBoard --module leaderboard
 ```
